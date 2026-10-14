@@ -237,10 +237,11 @@ filter <- dplyr::filter
 
 # Data and variables
 
-Path to the data folder.
+Path to the data folder. The replication package should be unpacked into
+`data/` next to this file, as described in the README.
 
 ```{r paths}
-base <- "/Users/nikitaobraztsov/Downloads/OSF Storage Archive"
+base <- "data"
 path_fa  <- file.path(base, "factor analysis", "factor_analysis.dta")
 path_cln <- file.path(base, "main analysis",   "cleaned_df.dta")
 ```
@@ -258,6 +259,7 @@ fa <- fa %>% mutate(
   n_attend = attendance / 6,    # service attendance         [practice]
   n_pray   = pray_freq / 5,     # prayer frequency           [practice]
   n_godD   = blv_god / 4,       # belief in God, detailed    [belief]
+  n_god    = god_e - 1,         # belief in God, yes/no      [belief]
   n_hell   = hell_e - 1,        # belief in hell             [belief]
   n_heaven = heaven_e - 1,      # belief in heaven           [belief]
   n_after  = afterdeath_e - 1   # belief in life after death [belief]
@@ -273,7 +275,7 @@ both parts sit on a 0–1 scale and their effects are comparable. The values
 correctly.
 
 ```{r subscales}
-belief_items <- c("n_godD","n_hell","n_heaven","n_after")
+belief_items <- c("n_godD","n_god","n_hell","n_heaven","n_after")
 prac_items   <- c("n_attend","n_pray")
 items8       <- c("n_self", prac_items, belief_items)
 
@@ -553,7 +555,6 @@ plotdf <- rbind(
   one(pub_prac,"practice",             "practice alone",  "Publications"),
   one(pub_both,c("belief","practice"), "joint",           "Publications")
 )
-plotdf$term <- ifelse(plotdf$term == "belief", "belief", "practice")
 
 ggplot(plotdf, aes(est, spec, color = term)) +
   geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
