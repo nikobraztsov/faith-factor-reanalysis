@@ -1,0 +1,584 @@
+---
+title: "Belief vs Practice in the Faith Factor Replication Data"
+author: "Nikita Obraztsov"
+date: "10 July 2026"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: cosmo
+    code_folding: show
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE, message = FALSE, warning = FALSE,
+  fig.width = 8, fig.height = 5
+)
+```
+
+# Research question and hypothesis
+
+I work with the replication package of Rainero, Stolz and Luijkx (2026),
+"The Faith Factor" (<https://osf.io/vcxnk/>). The authors measure
+researchers' religiosity with a single 0–8 score built from eight items
+about belief, practice, and self-identification. They then show that more
+religious authors are less likely to support secularization, both in their
+personal opinion and in the conclusions of their papers.
+
+A single score assumes all eight items measure the same thing. I test that
+assumption. I split the score into two subscales — belief and practice —
+and ask which of the two drives the effect.
+
+My question: does the effect run through doctrinal belief or through
+religious practice? My hypothesis is that the composite score hides two
+distinct axes, and I check whether belief and practice have different
+effects on the two outcomes (personal opinion and publication conclusion).
+Because I work with already-collected data, my sample is the sample of the
+original study.
+
+# Data source and survey design
+
+The data come from an online survey distributed to researchers by email,
+self-administered. A second dataset — a hand-coded set of publications by
+the same authors — is attached to it. Fieldwork ran from 30 April to
+8 June 2021. The replication package with data and code is public on OSF,
+so I can pull the original variables and rebuild the analysis.
+
+# Population and sampling
+
+The population is researchers who published on secularization between 2011
+and 2020. This is not a random sample from a pre-defined list. It is closer
+to a census of an identified population: the authors collected everyone
+they could find through a bibliographic search and invited each of them.
+The sampling type is closer to exhaustive selection from a bibliographic
+database with subsequent self-selection at the response stage.
+
+My reflection: for a question about bias among scholars, this approach is
+justified, since the target is a narrow professional community and it is
+easier to enumerate than to build a probability sample. The limitation is
+that the population is defined through publications — through the output of
+activity, not through a list of people. Anyone who did not publish an
+indexed article with the right keyword in that window is out, even if they
+actively work on the topic. Findings generalise to authors of
+secularization articles in WoS for that decade, and beyond that only with
+caution.
+
+# Sampling frame
+
+The frame is the Web of Science Core Collection. The authors pulled all
+English-language articles with *secularization* or *secularisation* in the
+title, abstract, author keywords, or automatic key terms. In February 2021
+the search returned 1,664 articles and 2,015 authors and co-authors, with
+metadata including email and affiliation.
+
+Two clear distortions in the frame. First, English only. Researchers
+publishing in other languages drop out, which systematically shifts the
+composition toward Western academia — the authors acknowledge this.
+Second, publication type: WoS indexes journal articles above all, while in
+the sociology of religion major statements often appear as books. Key
+figures like Berger, Taylor, or Casanova are known primarily through books,
+and the frame partially loses them as authors. For my question this
+matters, because the belief–practice fusion I find may be a property of the
+Western journal segment rather than of all researchers of religion.
+
+# Data collection procedure
+
+Of the 2,015 authors found, the contact list was cleaned: 13 duplicates,
+22 deceased authors, and 33 people whose email could not be found were
+removed. That left 1,947 invitees. The survey was completed by 954 people,
+a 49 per cent response rate. Of those, 111 who answered "no" to the filter
+question "Is religion one of your research interests?" were excluded, along
+with 42 who dropped out on the first page. That left 801 researchers. Their
+secularization publications — 1,076 articles in total — were downloaded and
+hand-coded by two coders. After excluding irrelevant and inaccessible
+papers, the final dataset contains 949 articles by 703 authors.
+
+The procedure is transparent and well documented. A 49 per cent response
+rate for an academic survey is high. The weak point is the manual coding of
+publications, since deciding whether an article supports secularization
+requires judgement, especially in mixed cases. The authors are aware of
+this: they set explicit rules and checked inter-coder agreement, with
+Cohen's kappa of 0.65 and 83.8 per cent agreement. This counts as
+substantial agreement, but not perfect, and some contested articles may
+have been classified differently.
+
+# Sample quality: precision, bias, non-response
+
+**Precision.** The dataset is large — 703 authors and 949 articles — and
+the WoS metadata are consistent, which gives decent precision for estimates
+inside the identified population.
+
+**Bias and non-response.** Half of the invitees did not respond, and
+non-response is a problem if it correlates with religiosity itself, which
+is exactly what the survey measures. The authors note that belief and
+practice questions are sensitive and produce elevated non-response in
+academia because of the tension between science and faith. Religiosity
+items are missing for 15.8 per cent of cases, and those missings sit on the
+sensitive questions. It is plausible that religious researchers in secular
+departments respond less often or skip those items, which is a mechanism
+that depends on the value of the variable itself — closer to non-ignorable
+missingness.
+
+The authors impute missings using multiple imputation with PMM, which
+assumes the missingness is explainable by observed variables. If
+missingness is tied to an unobserved level of religiosity, that assumption
+breaks and imputation does not fully solve the problem. In my analysis I
+work on complete cases and do not impute. A useful next step would be an
+analysis of non-response itself, for example comparing respondents and
+non-respondents on available metadata such as discipline, country, or
+productivity, to gauge the direction of the potential bias. A second
+limitation is self-selection through the research-interest filter, which
+narrows the population further inside the survey.
+
+# Key concepts and operationalisation
+
+The main predictor is researchers' religiosity: an additive index from 0 to
+8, an interval-level variable assembled from eight items of different
+formats. In this project I split it into two subscales, belief and
+practice, both continuous on a 0–1 range.
+
+The first outcome is the author's personal opinion on secularization, a
+binary nominal variable, a property of the author. The second outcome is
+the conclusion of the publication on secularization, also binary nominal, a
+property of the article, produced by manual coding.
+
+Controls: methodology (nominal, three categories), religious tradition
+studied (nominal), geographical context (nominal), scholarly influence as
+the log of citations and the h-index (continuous), denomination (nominal),
+gender (binary), age (continuous), discipline (nominal).
+
+The religiosity scale comes from ESS instruments and from Billiet and Voas
+— a validated item set. It includes self-rated religiosity (0–3), four
+binary items on belief in heaven, hell, life after death, and God, a
+detailed belief-in-God item (0–4), prayer frequency (0–5), and service
+attendance (0–6). All items are normalised to 0–1 and summed into a 0–8
+score.
+
+**Factor structure and measurement quality.** I checked dimensionality
+with parallel analysis: the data retain one component, which accounts for
+71 per cent of total variance. Reliability is high: Cronbach's alpha 0.94
+for the full scale, 0.93 for belief, and 0.84 for practice. By these
+criteria the scale is unidimensional and internally consistent. There is a
+measurement-theory subtlety here: technically the score is an index built
+by summation, but psychometrically it behaves as a reflective
+unidimensional scale, with a single latent construct of religiosity behind
+the items. This project tested whether that construct splits into belief
+and practice. The data do not separate them: the subscales correlate at
+0.83.
+
+**Reflection on construct validity.** The main limitation is the cultural
+anchoring of the belief items. Heaven, hell, and belief in God are a
+Christian and broadly theistic frame that travels poorly to non-theistic
+traditions. Among the studied communities there is Buddhism, Hinduism, and
+non-religious groups, and for researchers with such a background the belief
+items may underestimate their religiosity or measure something else. The
+practice items — prayer and service attendance — travel better, though
+"service" presumes a congregational religion. Self-rated religiosity stands
+apart, since it captures subjective identity rather than belief or
+behaviour. For the purposes of this study, where the religiosity of a
+mostly Western group of scholars is what matters, the scale fits, but its
+Western-Christian slant is worth keeping in mind.
+
+# Outcomes: operationalisation and critique of wording
+
+Publication conclusions are coded dichotomously: supports secularization or
+not. The binary format flattens a position that is more of a continuum,
+which the authors acknowledge, explaining the choice as driven by
+comparability across papers. Manual coding adds an element of subjectivity.
+
+Author opinion is measured with a single binary question. The wording:
+among scholars engaged in debates about secularization, many argue that the
+process of secularization manifests as a general decline in religious
+beliefs and practices; regardless of the results of your own research, do
+you agree with this statement? The clause about independence from results
+is well placed — it tries to separate personal opinion from findings. The
+weakness is that a complex, graded belief is reduced to a single binary
+item, and the nuance of the position disappears. In my view an ordinal
+agreement scale would have been preferable.
+
+# Hypotheses and handling of missings
+
+My analysis compares the effects of belief and practice on the two
+outcomes in logistic models with clustering by author. Separately, both
+axes significantly reduce support for secularization on both outcomes. In
+the joint model, practice survives for opinion and belief survives for
+publication. But a direct test of coefficient equality shows nothing,
+because of the high correlation between the two. The substantive conclusion
+is that the choice of measurement shapes the result, and the data are not
+always able to separate two ways of measuring the same thing.
+
+On missings, my main analysis runs on complete cases. Religiosity is
+missing for 15.8 per cent of cases, and because that missingness is
+plausibly tied to religiosity itself, imputation under a missing-at-random
+assumption does not fully solve the problem.
+
+# Libraries
+
+```{r libraries}
+library(haven)
+library(dplyr)
+library(psych)
+library(diptest)
+library(sandwich)
+library(car)
+library(marginaleffects)
+library(ggplot2)
+```
+
+```{r helpers, include=FALSE}
+alpha  <- psych::alpha
+recode <- dplyr::recode
+select <- dplyr::select
+filter <- dplyr::filter
+```
+
+# Data and variables
+
+Path to the data folder.
+
+```{r paths}
+base <- "/Users/nikitaobraztsov/Downloads/OSF Storage Archive"
+path_fa  <- file.path(base, "factor analysis", "factor_analysis.dta")
+path_cln <- file.path(base, "main analysis",   "cleaned_df.dta")
+```
+
+I rescale the eight items to 0–1, because they have different ranges and
+without rescaling an item with a wide range would weigh more in the sum
+than a short one. Dividing by the maximum and subtracting one for binary
+items follows what the authors themselves did.
+
+```{r recode-fa}
+fa <- read_dta(path_fa)
+
+fa <- fa %>% mutate(
+  n_self   = rlgs / 3,          # self-rated religiosity (0-3)
+  n_attend = attendance / 6,    # service attendance         [practice]
+  n_pray   = pray_freq / 5,     # prayer frequency           [practice]
+  n_godD   = blv_god / 4,       # belief in God, detailed    [belief]
+  n_hell   = hell_e - 1,        # belief in hell             [belief]
+  n_heaven = heaven_e - 1,      # belief in heaven           [belief]
+  n_after  = afterdeath_e - 1   # belief in life after death [belief]
+)
+```
+
+I build three things from the items, because I want to compare belief and
+practice as separate predictors. Belief is the mean of five items on God
+and the afterlife. Practice is the mean of two items on attendance and
+prayer. The overall score is the sum of all eight. I use the mean so that
+both parts sit on a 0–1 scale and their effects are comparable. The values
+3.22 and 2.94 match Table 2 of the paper, which confirms I built the scale
+correctly.
+
+```{r subscales}
+belief_items <- c("n_godD","n_hell","n_heaven","n_after")
+prac_items   <- c("n_attend","n_pray")
+items8       <- c("n_self", prac_items, belief_items)
+
+fa <- fa %>% mutate(
+  belief   = rowMeans(across(all_of(belief_items))),   # 0-1
+  practice = rowMeans(across(all_of(prac_items))),     # 0-1
+  self01   = n_self,                                   # 0-1
+  relig08  = rowSums(across(all_of(items8)))           # 0-8
+)
+
+cat(sprintf("relig08: mean=%.2f sd=%.2f, missing %.1f%%\n",
+            mean(fa$relig08, na.rm=TRUE), sd(fa$relig08, na.rm=TRUE),
+            mean(is.na(fa$relig08))*100))
+```
+
+I join the subscales to the article-level data, because the models work at
+the article level while belief and practice are measured at the author
+level. The `cleaned_df` file already holds the outcomes and controls,
+recoded by the authors, so I take them as they are. At the end I keep only
+complete cases, so all models run on the same sample.
+
+```{r merge}
+cl <- read_dta(path_cln)
+
+d <- cl %>%
+  select(-any_of("relig08")) %>%
+  left_join(select(fa, ResponseID, belief, practice, self01, relig08),
+            by = "ResponseID") %>%
+  mutate(relig01 = relig08 / 8,
+         across(c(method_1, focusrel2, area3, rel_denomin, gndr, accadem_field),
+                as_factor))
+
+vars_model <- c("belief","practice","relig01","quality_ln","cent_age",
+                "method_1","focusrel2","area3","rel_denomin","gndr","accadem_field")
+d_cc <- d %>% filter(if_all(all_of(vars_model), ~ !is.na(.)))
+
+cat(sprintf("All: %d articles, %d authors. In models: %d articles, %d authors.\n",
+            nrow(d), n_distinct(d$ResponseID),
+            nrow(d_cc), n_distinct(d_cc$ResponseID)))
+```
+
+# Descriptive overview
+
+Before the analysis I look at the composition of the sample. The dataset
+has 949 articles by 703 authors, and some authors wrote more than one
+article, which is why I cluster errors by author later. Below are the
+distributions at the article level and at the author level.
+
+```{r freq-fn, include=FALSE}
+freq <- function(x){
+  x   <- haven::as_factor(x)
+  tab <- as.data.frame(table(x)); names(tab) <- c("category","n")
+  tab$`%` <- round(100 * tab$n / sum(tab$n), 1)
+  tab
+}
+```
+
+```{r descriptives}
+da <- distinct(d, ResponseID, .keep_all = TRUE)   # one row per author
+
+freq(d$outcome_1)      # publication conclusion
+freq(d$method_1)       # methodology
+freq(da$opinion_1)     # author's personal opinion
+freq(da$rel_denomin)   # denomination
+freq(da$accadem_field) # discipline
+freq(da$gndr)          # gender
+
+cat(sprintf("Age: mean=%.1f sd=%.1f (%.0f-%.0f)\n",
+            mean(da$age, na.rm=TRUE), sd(da$age, na.rm=TRUE),
+            min(da$age, na.rm=TRUE), max(da$age, na.rm=TRUE)))
+```
+
+Publication conclusions split almost evenly (46 per cent find
+secularization, 54 do not). Author opinion leans toward secularization (57
+against 43). The sample is 72 per cent male, mean age 51, about half the
+authors have no denomination, and sociologists dominate.
+
+# Scale properties
+
+Before running regressions I check whether the eight items can be summed
+into one score at all.
+
+I check the shape of the distribution, because the regression treats the
+score as continuous and that only makes sense if values are spread
+evenly. The distribution is bimodal: p below 0.0001, BC coefficient 0.72.
+The sample splits into a secular edge at zero and a religious edge at the
+top, with an empty middle. So the religiosity effect later is essentially a
+contrast between two edges.
+
+```{r dip-test}
+x <- na.omit(fa$relig08)
+d.test <- dip.test(x)
+BC <- (skew(x)^2 + 1) / (kurtosi(x) + 3*(length(x)-1)^2 /
+                            ((length(x)-2)*(length(x)-3)))
+
+cat(sprintf("dip p=%.4f | BC=%.2f | at zero (0-1): %.0f%% | at top (6-8): %.0f%%\n",
+            d.test$p.value, BC, mean(x<=1)*100, mean(x>=6)*100))
+
+hist(x, breaks = 0:8, col = "grey80",
+     main = "Religiosity scale (0-8)", xlab = "")
+```
+
+I check whether a single dimension sits behind the eight items, because
+the composite score is only justified in that case. Parallel analysis of
+components compares the data with random noise and retains one component,
+which takes 71 per cent of total variance. I also look at what would happen
+with two factors: the second factor collects belief in hell, heaven, and
+the afterlife. So the data split along the line of supernatural belief.
+
+```{r parallel-analysis}
+D <- fa %>% select(all_of(items8)) %>% na.omit()
+
+fa.parallel(D, fa = "pc", main = "Parallel analysis")
+
+pc1 <- principal(D, nfactors = 1)
+cat(sprintf("One component takes %.0f%% of variance.\n\n",
+            pc1$Vaccounted["Proportion Var", 1] * 100))
+
+pc2 <- principal(D, nfactors = 2, rotate = "oblimin")
+print(pc2$loadings, cutoff = 0.30)
+```
+
+Now Cronbach's alpha is worth reporting, because summing items into a
+score is only defensible when they agree. Alpha is high everywhere: 0.94
+for the full scale, 0.93 for belief, 0.84 for practice. Both the composite
+and the two subscales are internally reliable.
+
+```{r reliability}
+cat(sprintf("alpha: full=%.2f  belief=%.2f  practice=%.2f\n",
+            alpha(fa[items8])$total$raw_alpha,
+            alpha(fa[belief_items])$total$raw_alpha,
+            alpha(fa[prac_items])$total$raw_alpha))
+```
+
+I look at the correlation between belief and practice, because it tells me
+in advance whether they can be separated in a single model. The
+correlation is 0.83, which is very high: the items overlap heavily and
+separating their effects will be difficult.
+
+```{r correlation}
+cat(sprintf("Belief ~ practice correlation: r=%.2f\n",
+            cor(fa$belief, fa$practice, use = "complete.obs")))
+```
+
+# Models
+
+I fit logistic regressions here, because both outcomes are binary: does the
+author support secularization or not. The unit of analysis is the article,
+and I cluster errors by author, because articles by the same person are not
+independent. I report effects as percentage-point changes in probability
+via marginal effects, which are easier to read than logit coefficients. I
+rescaled the composite score to 0–1 so its effect is comparable with belief
+and practice. For each outcome I run four models: composite score, belief
+alone, practice alone, and both together.
+
+```{r helper-ame, include=FALSE}
+controls <- paste("method_1 + quality_ln + focusrel2 + area3 +",
+                  "rel_denomin + cent_age + gndr + accadem_field")
+
+ame <- function(model, v){
+  s <- avg_slopes(model, variables = v, vcov = ~ResponseID)
+  data.frame(term = s$term,
+             AME  = round(s$estimate, 3),
+             p    = round(s$p.value, 3))
+}
+```
+
+```{r opinion-models}
+op_full <- glm(as.formula(paste("opinion_1 ~ relig01 +", controls)),
+               d_cc, family = binomial)
+op_bel  <- glm(as.formula(paste("opinion_1 ~ belief +", controls)),
+               d_cc, family = binomial)
+op_prac <- glm(as.formula(paste("opinion_1 ~ practice +", controls)),
+               d_cc, family = binomial)
+op_both <- glm(as.formula(paste("opinion_1 ~ belief + practice +", controls)),
+               d_cc, family = binomial)
+
+ame(op_full, "relig01")
+ame(op_bel,  "belief")
+ame(op_prac, "practice")
+ame(op_both, c("belief","practice"))
+```
+
+```{r publication-models}
+pub_full <- glm(as.formula(paste("outcome_1 ~ relig01 +", controls)),
+                d_cc, family = binomial)
+pub_bel  <- glm(as.formula(paste("outcome_1 ~ belief +", controls)),
+                d_cc, family = binomial)
+pub_prac <- glm(as.formula(paste("outcome_1 ~ practice +", controls)),
+                d_cc, family = binomial)
+pub_both <- glm(as.formula(paste("outcome_1 ~ belief + practice +", controls)),
+                d_cc, family = binomial)
+
+ame(pub_full, "relig01")
+ame(pub_bel,  "belief")
+ame(pub_prac, "practice")
+ame(pub_both, c("belief","practice"))
+```
+
+Separately, both belief and practice significantly reduce support for
+secularization on both outcomes. In the joint model, practice stays
+significant for opinion and belief drops to zero. For publications it is
+the other way around: belief stays and practice drops to zero. At first
+glance this looks like two different lines: opinion runs on practice,
+publications run on belief.
+
+# Testing the difference
+
+A significant predictor in a joint model alongside a non-significant one
+does not by itself mean the two are different. So I test the difference
+directly, using a linear hypothesis on the equality of the belief and
+practice coefficients. The test gives p around 0.36 and 0.35 for the two
+outcomes: the difference is not significant. VIF around 4.4 shows why.
+Belief and practice overlap heavily, and the data simply lack the spread to
+attribute the effect confidently to one of them.
+
+```{r lh-opinion}
+linearHypothesis(op_both, "belief = practice",
+                 vcov. = vcovCL(op_both, cluster = ~ResponseID))
+```
+
+```{r lh-publication}
+linearHypothesis(pub_both, "belief = practice",
+                 vcov. = vcovCL(pub_both, cluster = ~ResponseID))
+vif(pub_both)[c("belief","practice"), ]
+```
+
+# Robustness
+
+I check the result on the subsample of quantitative articles, where
+religiosity is measured in more standard ways and depends less on
+interpretation. The lead role of belief for publications is even stronger
+there (−0.30). Separately I recompute opinion on one observation per
+author, because opinion is a property of the person, while the main model
+repeats it as many times as the author has articles. At the pure author
+level the direction of the subscales is the same, so the result is not an
+artefact.
+
+```{r robustness-quant}
+quant <- d_cc %>% filter(method_1 == "Quantitative") %>% droplevels()
+pub_q <- glm(outcome_1 ~ belief + practice + quality_ln + focusrel2 +
+               area3 + rel_denomin + cent_age + gndr + accadem_field,
+             quant, family = binomial)
+cat("Quantitative articles, publication conclusion:\n")
+ame(pub_q, c("belief","practice"))
+```
+
+```{r robustness-author}
+authors <- distinct(d, ResponseID, .keep_all = TRUE) %>%
+  filter(!is.na(opinion_1), !is.na(belief), !is.na(practice))
+op_auth <- glm(opinion_1 ~ belief + practice + rel_denomin + gndr + cent_age,
+               authors, family = binomial)
+cat("\nOpinion, author level:\n")
+ame(op_auth, c("belief","practice"))
+```
+
+# Plot
+
+Effects of belief and practice on one plot. The point is the estimate, the
+segment is the confidence interval, and the vertical line at zero is the
+significance threshold. In separate models both axes are significant; in
+the joint model practice survives for opinion and belief survives for
+publications. The belief and practice intervals overlap considerably, which
+is exactly why the equality test fails.
+
+```{r plot, fig.height=5}
+one <- function(model, v, spec, outcome){
+  s <- avg_slopes(model, variables = v, vcov = ~ResponseID)
+  data.frame(outcome, spec, term = s$term,
+             est = s$estimate, lo = s$conf.low, hi = s$conf.high)
+}
+plotdf <- rbind(
+  one(op_bel,  "belief",               "belief alone",    "Opinion"),
+  one(op_prac, "practice",             "practice alone",  "Opinion"),
+  one(op_both, c("belief","practice"), "joint",           "Opinion"),
+  one(pub_bel, "belief",               "belief alone",    "Publications"),
+  one(pub_prac,"practice",             "practice alone",  "Publications"),
+  one(pub_both,c("belief","practice"), "joint",           "Publications")
+)
+plotdf$term <- ifelse(plotdf$term == "belief", "belief", "practice")
+
+ggplot(plotdf, aes(est, spec, color = term)) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey50") +
+  geom_point(position = position_dodge(0.4), size = 2.5) +
+  geom_errorbarh(aes(xmin = lo, xmax = hi),
+                 position = position_dodge(0.4), height = 0.2) +
+  facet_wrap(~outcome) +
+  labs(x = "Effect on probability of supporting secularization (0 -> 1 shift)",
+       y = NULL, color = NULL) +
+  theme_minimal() + theme(legend.position = "bottom")
+```
+
+# Conclusion
+
+The composite religiosity score contains two parts, belief and practice,
+and I tried to see which of them drives the bias in research. The scale
+turned out to be bimodal in shape, unidimensional in structure, and
+reliable in internal consistency, so summing the items into a score is
+defensible on these data. Separately, both belief and practice reduce
+support for secularization. I could not separate their contributions in
+the joint model: they are too similar, correlated at 0.83, and the
+equality test shows nothing. The apparent negative result is the
+substantive one. How you choose to measure religiosity shapes what you
+find, and the data are not always able to distinguish two ways of
+measuring what is, in effect, one thing. For a paper that itself studies
+bias in science, this matters: the instrument used to measure researchers'
+religiosity inherits the same dependence on measurement choice as the
+subject of their debate.

@@ -1,0 +1,19 @@
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+renv/
+
+# Rendered output
+output/*.html
+!output/.gitkeep
+
+# Everything inside data/ except .gitkeep (OSF files, do-files, dta, csv)
+data/**
+!data/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
